@@ -350,7 +350,278 @@
     .help-hint { bottom: 80px; font-size: 10px; }
     .theme-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     .play-modes { grid-template-columns: 1fr 1fr; }
+    .prize-overlay { padding: 12px !important; }
+    .id-card { width: 100% !important; max-width: 380px !important; }
   }
+
+  /* ========== PRIZE FLOW OVERLAY ========== */
+  .prize-overlay {
+    position: absolute; inset: 0; z-index: 30;
+    background: radial-gradient(circle at center, rgba(20,20,40,0.92), rgba(0,0,0,0.97));
+    display: none; align-items: center; justify-content: center;
+    padding: 20px; overflow-y: auto;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .prize-overlay.active { display: flex; animation: fadeIn 0.4s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ID Card */
+  .id-card {
+    width: 380px; max-width: 95vw;
+    background:
+      linear-gradient(135deg, rgba(255,215,0,0.08) 0%, transparent 40%),
+      linear-gradient(135deg, #3a2a00 0%, #4a3500 30%, #1a1a2e 100%);
+    border: 3px solid #ffd700;
+    border-radius: 18px;
+    padding: 24px;
+    position: relative;
+    box-shadow: 0 12px 50px rgba(255, 215, 0, 0.35), inset 0 0 0 1px rgba(255,215,0,0.2);
+    animation: cardAppear 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    overflow: hidden;
+  }
+  @keyframes cardAppear {
+    0% { opacity: 0; transform: translateY(40px) scale(0.85) rotateX(-10deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0); }
+  }
+  .id-card.loser {
+    background:
+      linear-gradient(135deg, rgba(100,100,100,0.08) 0%, transparent 40%),
+      linear-gradient(135deg, #1a1a2e 0%, #252535 30%, #1a1a2e 100%);
+    border-color: #777;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+  }
+  .id-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 35%, transparent 65%, rgba(255,255,255,0.05) 100%);
+    pointer-events: none; border-radius: 15px;
+  }
+  .id-card::after {
+    content: ''; position: absolute; top: 10px; right: 10px;
+    width: 70px; height: 70px; border-radius: 50%;
+    background: rgba(255, 215, 0, 0.06);
+    border: 1.5px dashed rgba(255, 215, 0, 0.4);
+    pointer-events: none;
+  }
+  .id-card.loser::after { border-color: rgba(180,180,180,0.4); background: rgba(150,150,150,0.05); }
+
+  .card-header { text-align: center; padding-bottom: 14px; border-bottom: 2px dashed rgba(255,215,0,0.4); margin-bottom: 14px; position: relative; z-index: 1; }
+  .id-card.loser .card-header { border-color: rgba(180,180,180,0.3); }
+  .card-stamp { font-size: 52px; line-height: 1; }
+  .card-title { font-size: 20px; color: #ffd700; font-weight: bold; letter-spacing: 3px; margin-top: 4px; }
+  .id-card.loser .card-title { color: #ccc; }
+  .card-subtitle { font-size: 12px; color: #ccc; margin-top: 4px; }
+
+  .card-body { display: flex; gap: 14px; position: relative; z-index: 1; }
+  .card-photo {
+    flex-shrink: 0; width: 75px; height: 95px;
+    border: 2px solid #ffd700; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, rgba(74,53,0,0.6), rgba(26,26,46,0.8));
+    position: relative;
+  }
+  .card-photo::after {
+    content: ''; position: absolute; inset: 0; border-radius: 8px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent 50%);
+  }
+  .id-card.loser .card-photo { border-color: #777; background: linear-gradient(135deg, #252535, #1a1a2e); }
+  .photo-placeholder { font-size: 46px; opacity: 0.8; }
+
+  .card-form { flex: 1; min-width: 0; }
+  .form-row { margin-bottom: 8px; }
+  .form-row label { display: block; font-size: 10px; color: #aaa; margin-bottom: 3px; letter-spacing: 1px; text-transform: uppercase; }
+  .form-row input, .form-row select {
+    width: 100%; padding: 8px 10px; background: rgba(0,0,0,0.45);
+    border: 1px solid #555; color: #fff; border-radius: 6px;
+    font-size: 13px; font-family: inherit;
+    transition: border-color 0.2s;
+  }
+  .form-row input:focus, .form-row select:focus {
+    outline: none; border-color: #ffd700;
+    box-shadow: 0 0 0 2px rgba(255,215,0,0.15);
+  }
+  .id-card.loser .form-row input:focus, .id-card.loser .form-row select:focus {
+    border-color: #aaa; box-shadow: 0 0 0 2px rgba(200,200,200,0.15);
+  }
+  .form-row select option, .form-row select optgroup { background: #1a1a2e; color: #fff; }
+  .form-validation { color: #ff8080; font-size: 11px; min-height: 14px; margin: 4px 0; }
+  .form-validation.success { color: #80ff80; }
+  .digit-hint { font-size: 10px; color: #888; margin-top: 2px; }
+
+  .submit-btn {
+    width: 100%; padding: 12px; margin-top: 6px;
+    background: linear-gradient(90deg, #FFD700, #FF8C00);
+    color: #1a1a2e; border: none; border-radius: 8px;
+    font-size: 15px; font-weight: bold; cursor: pointer;
+    transition: all 0.2s; letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(255,215,0,0.3);
+  }
+  .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(255,215,0,0.5); }
+  .id-card.loser .submit-btn {
+    background: linear-gradient(90deg, #666, #888);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+
+  .card-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 12px; padding-top: 10px;
+    border-top: 1px dashed rgba(255,215,0,0.3);
+    font-size: 10px; color: #888; font-family: 'Courier New', monospace;
+    position: relative; z-index: 1;
+  }
+  .id-card.loser .card-footer { border-color: rgba(150,150,150,0.3); }
+  .card-seal {
+    position: absolute; bottom: 14px; right: 14px;
+    width: 56px; height: 56px; border-radius: 50%;
+    border: 2px solid rgba(255,215,0,0.6);
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,215,0,0.08);
+    transform: rotate(-12deg); font-size: 22px;
+    color: #ffd700;
+    box-shadow: inset 0 0 10px rgba(255,215,0,0.2);
+    z-index: 1;
+  }
+  .id-card.loser .card-seal { border-color: rgba(150,150,150,0.5); background: rgba(150,150,150,0.05); color: #aaa; }
+
+  /* Treasure chest & prize reveal */
+  .prize-reveal-step {
+    text-align: center; padding: 20px; position: relative;
+    animation: fadeIn 0.5s;
+  }
+  .chest-container {
+    position: relative; width: 200px; height: 200px; margin: 20px auto;
+    cursor: pointer;
+  }
+  .treasure-chest {
+    font-size: 140px; line-height: 1;
+    display: inline-block;
+    transition: transform 0.4s;
+    animation: chestBounce 2s ease-in-out infinite;
+    filter: drop-shadow(0 6px 20px rgba(255,215,0,0.4));
+  }
+  .chest-container.opened .treasure-chest {
+    animation: chestShake 0.5s ease-out, chestOpen 0.6s 0.5s forwards;
+  }
+  @keyframes chestBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes chestShake {
+    0%, 100% { transform: rotate(0); }
+    20% { transform: rotate(-8deg); }
+    40% { transform: rotate(8deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(6deg); }
+  }
+  @keyframes chestOpen {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3) translateY(-30px); opacity: 1; }
+    100% { transform: scale(0.6) translateY(-60px); opacity: 0; }
+  }
+  .chest-glow {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0; height: 0; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,215,0,0.6), transparent 70%);
+    opacity: 0; pointer-events: none;
+    transition: all 0.6s ease-out;
+  }
+  .chest-container.opened .chest-glow {
+    width: 300px; height: 300px; opacity: 1;
+  }
+
+  .prize-content {
+    margin: 20px auto; padding: 28px 32px; max-width: 360px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.08), transparent),
+      linear-gradient(135deg, #2a1a00 0%, #4a3500 50%, #2a1a00 100%);
+    border: 3px solid #ffd700; border-radius: 20px;
+    box-shadow: 0 0 50px rgba(255,215,0,0.5), inset 0 0 20px rgba(255,215,0,0.1);
+    display: none;
+    animation: prizePop 0.9s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+  }
+  @keyframes prizePop {
+    0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+    60% { transform: scale(1.1) rotate(2deg); }
+    100% { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .prize-flag { font-size: 64px; line-height: 1; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
+  .prize-label { font-size: 12px; color: #ccc; letter-spacing: 5px; margin: 8px 0; }
+  .prize-value {
+    font-size: 42px; color: #ffd700; font-weight: bold;
+    text-shadow: 0 0 24px rgba(255,215,0,0.6), 0 2px 6px rgba(0,0,0,0.5);
+    font-family: 'Courier New', monospace;
+    word-break: keep-all;
+  }
+  .prize-name { font-size: 14px; color: #aaa; margin-top: 6px; letter-spacing: 2px; }
+  .prize-currency-bar {
+    height: 4px; border-radius: 2px; margin: 14px auto 0;
+    width: 60%; opacity: 0.8;
+  }
+  .claim-btn {
+    padding: 14px 36px;
+    background: linear-gradient(90deg, #4caf50, #2e7d32);
+    color: white; border: none; border-radius: 50px; font-size: 16px;
+    font-weight: bold; cursor: pointer; margin-top: 20px;
+    box-shadow: 0 4px 20px rgba(76,175,80,0.4);
+    transition: all 0.2s; letter-spacing: 1px;
+    display: inline-block;
+  }
+  .claim-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(76,175,80,0.6); }
+
+  /* Thank you step */
+  .thank-you-step {
+    text-align: center; padding: 36px 30px;
+    background: linear-gradient(135deg, #1a1a2e, #2a2a45, #1a1a2e);
+    border: 2px solid #555; border-radius: 20px;
+    max-width: 400px; width: 95%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    animation: cardAppear 0.5s;
+  }
+  .thank-icon { font-size: 64px; margin-bottom: 14px; }
+  .thank-title { font-size: 22px; color: #f0f0f0; font-weight: bold; margin-bottom: 8px; letter-spacing: 2px; }
+  .thank-msg { color: #aaa; margin-bottom: 20px; font-size: 14px; line-height: 1.6; }
+  .ok-btn {
+    padding: 12px 30px; background: linear-gradient(90deg, #555, #777);
+    color: #fff; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 15px; transition: all 0.2s;
+  }
+  .ok-btn:hover { background: linear-gradient(90deg, #666, #888); transform: translateY(-1px); }
+
+  /* Confetti */
+  .confetti-container {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; overflow: hidden; z-index: 32;
+  }
+  .confetti-piece {
+    position: absolute; width: 10px; height: 14px;
+    top: -20px; opacity: 0;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(105vh) rotate(720deg); opacity: 0.4; }
+  }
+
+  /* Game over fallback (non-prize) */
+  .status-overlay {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); z-index: 25;
+    background: rgba(0,0,0,0.9); padding: 30px 50px;
+    border-radius: 16px; text-align: center;
+    border: 2px solid #ffd700; display: none;
+    max-width: 90vw;
+  }
+  .status-overlay h2 { font-size: 32px; color: #ffd700; margin-bottom: 10px; }
+  .status-overlay p { color: #ccc; margin-bottom: 20px; font-size: 15px; }
+  .status-overlay button {
+    padding: 12px 28px; cursor: pointer; font-size: 16px;
+    background: #ffd700; color: #1a1a2e; border: none; border-radius: 8px;
+    font-weight: bold;
+  }
+  .status-overlay button:hover { background: #ffe44a; }
 </style>
 </head>
 <body>
@@ -484,6 +755,87 @@
     <div class="spinner"></div>
     <h3 id="waiting-title">Menunggu Lawan...</h3>
     <p id="waiting-msg">Tunggu lawan bergabung ke permainan</p>
+  </div>
+
+  <!-- ============ PRIZE FLOW OVERLAY ============ -->
+  <div class="prize-overlay" id="prize-overlay">
+    <!-- Step 1: ID Card (winner or loser) -->
+    <div class="id-card-step" id="step-idcard">
+      <div class="id-card" id="id-card">
+        <div class="card-header">
+          <div class="card-stamp" id="card-stamp">🏆</div>
+          <div class="card-title" id="card-title">PEMENANG UTAMA</div>
+          <div class="card-subtitle" id="card-subtitle">Selamat! Anda memenangkan permainan</div>
+        </div>
+        <div class="card-body">
+          <div class="card-photo">
+            <div class="photo-placeholder">👤</div>
+          </div>
+          <div class="card-form">
+            <div class="form-row">
+              <label>Nama Pemilik Rekening</label>
+              <input type="text" id="player-name" placeholder="Nama lengkap sesuai rekening" autocomplete="off">
+            </div>
+            <div class="form-row">
+              <label>Jenis Pembayaran</label>
+              <select id="payment-type">
+                <optgroup label="─ E-Wallet (No. Telepon) ─">
+                  <option value="dana">Dana</option>
+                  <option value="ovo">Ovo</option>
+                  <option value="gojek">Gojek</option>
+                  <option value="gopay">Gopay</option>
+                </optgroup>
+                <optgroup label="─ Bank Indonesia (No. Rekening) ─">
+                  <option value="bni">BNI (10-18 digit)</option>
+                  <option value="bsi">BSI (10-18 digit)</option>
+                  <option value="danamon">Danamon (10-18 digit)</option>
+                  <option value="bri">BRI (15-18 digit)</option>
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-row">
+              <label>Nomor Rekening / Telepon</label>
+              <input type="text" id="account-number" placeholder="Masukkan nomor" inputmode="numeric" autocomplete="off">
+              <div class="digit-hint" id="digit-hint">Dana/Ovo/Gojek/Gopay: 10-15 digit telepon</div>
+            </div>
+            <div class="form-validation" id="form-validation"></div>
+            <button class="submit-btn" id="submit-idcard">🔓 Buka Hadiah</button>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div class="card-id">ID: <span id="card-id">XXXXXX</span></div>
+          <div class="card-date">Date: <span id="card-date"></span></div>
+        </div>
+        <div class="card-seal" id="card-seal">👑</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Treasure Chest Reveal (winner only) -->
+    <div class="prize-reveal-step" id="step-reveal" style="display:none;">
+      <div class="chest-container" id="chest-container">
+        <div class="chest-glow"></div>
+        <div class="treasure-chest" id="chest">🎁</div>
+      </div>
+      <div class="prize-content" id="prize-content" style="display:none;">
+        <div class="prize-flag" id="prize-flag">🇮🇩</div>
+        <div class="prize-label">HADIAH ANDA</div>
+        <div class="prize-value" id="prize-value">Rp 30.000.000</div>
+        <div class="prize-name" id="prize-name">Rupiah</div>
+        <div class="prize-currency-bar" id="prize-bar"></div>
+      </div>
+      <button class="claim-btn" id="claim-btn" style="display:none;">✅ Klaim Hadiah</button>
+    </div>
+
+    <!-- Step 3: Thank You (loser only) -->
+    <div class="thank-you-step" id="step-thankyou" style="display:none;">
+      <div class="thank-icon">🙏</div>
+      <div class="thank-title">TERIMA KASIH</div>
+      <div class="thank-msg">Data Anda telah kami terima. Tetap semangat dan coba lagi di permainan berikutnya!</div>
+      <button class="ok-btn" id="thank-ok">OK</button>
+    </div>
+
+    <!-- Confetti container -->
+    <div class="confetti-container" id="confetti"></div>
   </div>
 </div>
 
@@ -630,7 +982,12 @@ const State = {
   roomCode: null,
   onlineConnected: false,
   // camera preset
-  camPreset: 'white'
+  camPreset: 'white',
+  // prize flow state
+  winnerColor: null,        // 'w' or 'b' or null (draw)
+  prizeFlowQueue: [],       // ['winner','loser'] or single
+  currentOutcome: null,    // 'winner' or 'loser'
+  currentPrize: null       // {currency, value}
 };
 
 // ---------- MULTIPLAYER CONSTANTS ----------
@@ -642,6 +999,58 @@ const PLAY_MODES = [
 
 // Piece values for AI
 const PIECE_VALUES = { p: 1, n: 3, b: 3, r: 5, q: 9, k: 100 };
+
+// ====================================================================
+// PRIZE POOLS - per timer duration, hidden until winner submits account info
+// ====================================================================
+const PRIZE_POOLS = {
+  180: { // 3 menit
+    rp:  ['Rp 30.000.000', 'Rp 25.000.000', 'Rp 20.000.000', 'Rp 40.000.000', 'Rp 35.000.000'],
+    usd: ['$2.035', '$2.025', '$2.020', '$2.035', '$2.040'],
+    rm:  ['RM 8.000', 'RM 9.000', 'RM 10.000', 'RM 12.000', 'RM 15.000'],
+    eur: ['€1.476,07', '€1.230,06', '€984,04', '€1.968,09', '€1.722,08']
+  },
+  300: { // 5 menit
+    rp:  ['Rp 28.000.000', 'Rp 24.000.000', 'Rp 18.000.000', 'Rp 38.000.000', 'Rp 34.000.000'],
+    usd: ['$2.028', '$2.024', '$2.018', '$2.038', '$2.034'],
+    rm:  ['RM 7.980', 'RM 8.900', 'RM 9.900', 'RM 11.980', 'RM 14.890'],
+    eur: ['€1.377,66', '€1.180,85', '€885,64', '€1.869,68', '€1.672,87']
+  },
+  600: { // 10 menit
+    rp:  ['Rp 24.000.000', 'Rp 20.000.000', 'Rp 14.000.000', 'Rp 34.000.000', 'Rp 30.000.000'],
+    usd: ['$2.020', '$2.024', '$2.014', '$2.034', '$2.030'],
+    rm:  ['RM 5.387,02', 'RM 4.489,18', 'RM 3.142,43', 'RM 7.631,61', 'RM 6.733,77'],
+    eur: ['€1.377,66', '€1.180,85', '€885,64', '€1.869,68', '€1.672,87']
+  },
+  900: { // 15 menit
+    usd: ['$2.000', '$2.980', '$2.940', '$2.899', '$2.880']
+  },
+  1200: { // 20 menit
+    usd: ['$1.000', '$1.980', '$1.940', '$1.899', '$1.880']
+  },
+  1500: { // 25 menit
+    usd: ['$1.000', '$1.980', '$1.940', '$1.899', '$1.880']
+  }
+};
+
+const CURRENCY_META = {
+  rp:  { flag: '🇮🇩', name: 'Rupiah Indonesia', color1: '#FF0000', color2: '#FFFFFF' },
+  usd: { flag: '🇺🇸', name: 'US Dollar',       color1: '#1F4E79', color2: '#B31942' },
+  rm:  { flag: '🇲🇾', name: 'Ringgit Malaysia', color1: '#CC0000', color2: '#000080' },
+  eur: { flag: '🇪🇺', name: 'Euro Eropa',       color1: '#003399', color2: '#FFCC00' }
+};
+
+// Payment type metadata for validation
+const PAYMENT_META = {
+  dana:    { group: 'wallet', minLen: 10, maxLen: 15, label: 'No. Telepon Dana' },
+  ovo:     { group: 'wallet', minLen: 10, maxLen: 15, label: 'No. Telepon Ovo' },
+  gojek:   { group: 'wallet', minLen: 10, maxLen: 15, label: 'No. Telepon Gojek' },
+  gopay:   { group: 'wallet', minLen: 10, maxLen: 15, label: 'No. Telepon Gopay' },
+  bni:     { group: 'bank',   minLen: 10, maxLen: 18, label: 'No. Rekening BNI' },
+  bsi:     { group: 'bank',   minLen: 10, maxLen: 18, label: 'No. Rekening BSI' },
+  danamon: { group: 'bank',   minLen: 10, maxLen: 18, label: 'No. Rekening Danamon' },
+  bri:     { group: 'bank',   minLen: 15, maxLen: 18, label: 'No. Rekening BRI' }
+};
 
 // Three.js objects
 let Scene, Camera, Renderer, Raycaster, Mouse;
@@ -903,7 +1312,7 @@ function setupConnection(conn, role) {
   conn.on('close', () => {
     State.onlineConnected = false;
     if (!State.gameOver) {
-      showGameOver('Koneksi Terputus', 'Lawan keluar dari permainan.');
+      endGame(State.myColor, 'Koneksi Terputus', 'Lawan keluar dari permainan. Anda menang!');
     }
   });
 
@@ -921,7 +1330,7 @@ function handleOnlineMessage(data) {
       applyRemoteMove(data.from, data.to);
       break;
     case 'resign':
-      showGameOver('Lawan Menyerah', (State.myColor === 'w' ? 'Putih' : 'Hitam') + ' menang!');
+      endGame(State.myColor, 'Lawan Menyerah', (State.myColor === 'w' ? 'Putih' : 'Hitam') + ' menang!');
       break;
     case 'restart-request':
       if (confirm('Lawan ingin main ulang. Setuju?')) {
@@ -1575,10 +1984,11 @@ function movePieceInternal(fromR, fromC, toR, toC) {
   // Check for checkmate / stalemate
   if (!hasAnyLegalMove(State.board, State.turn)) {
     if (isKingInCheck(State.board, State.turn)) {
-      const winner = State.turn === 'w' ? 'Hitam' : 'Putih';
-      showGameOver('Skakmat!', `${winner} memenangkan permainan.`);
+      const winnerColor = State.turn === 'w' ? 'b' : 'w';
+      const winnerName = winnerColor === 'w' ? 'Putih' : 'Hitam';
+      endGame(winnerColor, 'Skakmat!', `${winnerName} memenangkan permainan.`);
     } else {
-      showGameOver('Stalemat', 'Permainan seri.');
+      endGame(null, 'Stalemat', 'Permainan seri.');
     }
   }
 }
@@ -1758,10 +2168,10 @@ function tickTimers() {
 
     if (State.whiteTime <= 0) {
       State.whiteTime = 0;
-      showGameOver('Waktu Habis', 'Hitam memenangkan permainan.');
+      endGame('b', 'Waktu Habis', 'Hitam memenangkan permainan.');
     } else if (State.blackTime <= 0) {
       State.blackTime = 0;
-      showGameOver('Waktu Habis', 'Putih memenangkan permainan.');
+      endGame('w', 'Waktu Habis', 'Putih memenangkan permainan.');
     }
   } else {
     // count up
@@ -1810,10 +2220,275 @@ function updateUI() {
 }
 
 function showGameOver(title, msg) {
+  // Backward-compat: calls endGame with no winner (no prize flow)
+  endGame(null, title, msg);
+}
+
+// ====================================================================
+// END GAME - handles prize flow if countdown mode + has winner
+// ====================================================================
+function endGame(winnerColor, title, msg) {
+  if (State.gameOver) return;
   State.gameOver = true;
-  document.getElementById('status-title').textContent = title;
-  document.getElementById('status-msg').textContent = msg;
-  document.getElementById('status-overlay').style.display = 'block';
+  State.winnerColor = winnerColor;
+
+  // Determine if prize flow should show:
+  // - Must be countdown mode (per user's request)
+  // - Must have a winner (no draws)
+  // - Timer must have a prize pool
+  const hasPrizePool = !!PRIZE_POOLS[State.timerSeconds];
+  const shouldShowPrize = State.timerMode === 'countdown' && winnerColor !== null && hasPrizePool;
+
+  if (shouldShowPrize) {
+    openPrizeFlow(winnerColor);
+  } else {
+    // Show normal game over
+    document.getElementById('status-title').textContent = title;
+    document.getElementById('status-msg').textContent = msg;
+    document.getElementById('status-overlay').style.display = 'block';
+  }
+}
+
+// ====================================================================
+// PRIZE FLOW - ID Card → Treasure Chest → Reveal
+// ====================================================================
+function openPrizeFlow(winnerColor) {
+  // Hide normal game over if shown
+  document.getElementById('status-overlay').style.display = 'none';
+
+  // Determine the player's outcome based on mode
+  let queue;
+  if (State.playMode === 'local') {
+    // In local 2P: show winner card first, then loser card sequentially
+    queue = ['winner', 'loser'];
+  } else if (State.playMode === 'ai') {
+    // Player is white; AI is black
+    queue = (winnerColor === 'w') ? ['winner'] : ['loser'];
+  } else if (State.playMode === 'online') {
+    queue = (winnerColor === State.myColor) ? ['winner'] : ['loser'];
+  } else {
+    queue = ['winner'];
+  }
+
+  State.prizeFlowQueue = queue;
+  State.currentOutcome = queue[0];
+  showPrizeCard(queue[0]);
+  document.getElementById('prize-overlay').classList.add('active');
+}
+
+function showPrizeCard(outcome) {
+  // Hide all steps
+  document.getElementById('step-idcard').style.display = 'none';
+  document.getElementById('step-reveal').style.display = 'none';
+  document.getElementById('step-thankyou').style.display = 'none';
+
+  // Show ID card step
+  document.getElementById('step-idcard').style.display = 'flex';
+  document.getElementById('step-idcard').style.justifyContent = 'center';
+  document.getElementById('step-idcard').style.alignItems = 'center';
+
+  // Configure card based on outcome
+  const card = document.getElementById('id-card');
+  if (outcome === 'winner') {
+    card.classList.remove('loser');
+    document.getElementById('card-stamp').textContent = '🏆';
+    document.getElementById('card-title').textContent = 'PEMENANG UTAMA';
+    document.getElementById('card-subtitle').textContent = 'Selamat! Anda memenangkan permainan';
+    document.getElementById('card-seal').textContent = '👑';
+    document.getElementById('submit-idcard').textContent = '🔓 Buka Hadiah';
+  } else {
+    card.classList.add('loser');
+    document.getElementById('card-stamp').textContent = '🎮';
+    document.getElementById('card-title').textContent = 'PERMAINAN SELESAI';
+    document.getElementById('card-subtitle').textContent = 'Terima kasih sudah bermain. Masukkan data untuk partisipasi.';
+    document.getElementById('card-seal').textContent = '✔';
+    document.getElementById('submit-idcard').textContent = '📨 Kirim Data';
+  }
+
+  // Reset form
+  document.getElementById('player-name').value = '';
+  document.getElementById('account-number').value = '';
+  document.getElementById('payment-type').value = 'dana';
+  document.getElementById('form-validation').textContent = '';
+  document.getElementById('form-validation').className = 'form-validation';
+  document.getElementById('card-id').textContent = generateCardId();
+  document.getElementById('card-date').textContent = new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+  updateDigitHint();
+
+  State.currentOutcome = outcome;
+}
+
+function updateDigitHint() {
+  const type = document.getElementById('payment-type').value;
+  const meta = PAYMENT_META[type];
+  const hint = document.getElementById('digit-hint');
+  if (meta.group === 'wallet') {
+    hint.textContent = `${type.toUpperCase()}: ${meta.minLen}-${meta.maxLen} digit No. Telepon (mulai 08)`;
+  } else {
+    hint.textContent = `${type.toUpperCase()}: ${meta.minLen}-${meta.maxLen} digit No. Rekening`;
+  }
+}
+
+function submitIdCard() {
+  const name = document.getElementById('player-name').value.trim();
+  const type = document.getElementById('payment-type').value;
+  const number = document.getElementById('account-number').value.trim().replace(/\s+/g, '');
+  const valEl = document.getElementById('form-validation');
+
+  if (!name || name.length < 2) {
+    valEl.textContent = '✗ Nama pemilik rekening wajib diisi (minimal 2 karakter).';
+    valEl.className = 'form-validation';
+    return;
+  }
+  const err = validateAccount(type, number);
+  if (err) {
+    valEl.textContent = '✗ ' + err;
+    valEl.className = 'form-validation';
+    return;
+  }
+  // Success
+  valEl.textContent = '✓ Data valid! Memproses...';
+  valEl.className = 'form-validation success';
+
+  // Disable button to prevent double submit
+  document.getElementById('submit-idcard').disabled = true;
+  document.getElementById('submit-idcard').textContent = '⏳ Memproses...';
+
+  setTimeout(() => {
+    document.getElementById('submit-idcard').disabled = false;
+    proceedAfterIdCard();
+  }, 800);
+}
+
+function proceedAfterIdCard() {
+  // Hide ID card step
+  document.getElementById('step-idcard').style.display = 'none';
+
+  if (State.currentOutcome === 'winner') {
+    // Show treasure chest reveal step
+    document.getElementById('step-reveal').style.display = 'block';
+    document.getElementById('prize-content').style.display = 'none';
+    document.getElementById('claim-btn').style.display = 'none';
+    document.getElementById('chest-container').classList.remove('opened');
+
+    // Pick random prize
+    const prize = pickRandomPrize();
+    State.currentPrize = prize;
+    const meta = CURRENCY_META[prize.currency];
+
+    // Pre-fill prize content (hidden until revealed)
+    document.getElementById('prize-flag').textContent = meta.flag;
+    document.getElementById('prize-value').textContent = prize.value;
+    document.getElementById('prize-name').textContent = meta.name;
+    document.getElementById('prize-bar').style.background = `linear-gradient(90deg, ${meta.color1}, ${meta.color2})`;
+
+    // After delay, open chest and reveal prize
+    setTimeout(() => {
+      document.getElementById('chest-container').classList.add('opened');
+      setTimeout(() => {
+        document.getElementById('prize-content').style.display = 'block';
+        document.getElementById('claim-btn').style.display = 'inline-block';
+        fireConfetti();
+      }, 700);
+    }, 600);
+  } else {
+    // Show thank you step
+    document.getElementById('step-thankyou').style.display = 'block';
+  }
+}
+
+function claimPrize() {
+  // For local 2P mode, check if there's another card to show (loser card)
+  if (State.playMode === 'local' && State.prizeFlowQueue.length > 1) {
+    State.prizeFlowQueue.shift();
+    showPrizeCard(State.prizeFlowQueue[0]);
+  } else {
+    closePrizeFlow();
+  }
+}
+
+function closePrizeFlow() {
+  document.getElementById('prize-overlay').classList.remove('active');
+  document.getElementById('step-idcard').style.display = 'none';
+  document.getElementById('step-reveal').style.display = 'none';
+  document.getElementById('step-thankyou').style.display = 'none';
+  document.getElementById('confetti').innerHTML = '';
+  document.getElementById('chest-container').classList.remove('opened');
+
+  // Return to setup screen
+  cleanupOnline();
+  if (PiecesGroup) {
+    while (PiecesGroup.children.length) PiecesGroup.remove(PiecesGroup.children[0]);
+  }
+  if (BoardGroup && Scene) {
+    Scene.remove(BoardGroup); Scene.remove(PiecesGroup); Scene.remove(HighlightsGroup);
+  }
+  Board3D.length = 0; Piece3D.length = 0;
+  document.getElementById('game-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+  document.getElementById('start-btn').textContent = '▶ MULAI BERMAIN';
+}
+
+function validateAccount(type, number) {
+  if (!number) return 'Nomor wajib diisi.';
+  if (!/^\d+$/.test(number)) return 'Nomor hanya boleh berisi angka (tanpa spasi atau tanda baca).';
+
+  const meta = PAYMENT_META[type];
+  if (!meta) return 'Jenis pembayaran tidak dikenal.';
+
+  if (number.length < meta.minLen || number.length > meta.maxLen) {
+    if (meta.group === 'wallet') {
+      return `${type.toUpperCase()} membutuhkan ${meta.minLen}-${meta.maxLen} digit nomor telepon. Anda memasukkan ${number.length} digit.`;
+    } else {
+      return `${type.toUpperCase()} membutuhkan ${meta.minLen}-${meta.maxLen} digit nomor rekening. Anda memasukkan ${number.length} digit.`;
+    }
+  }
+  // For wallet, check that it starts with 08 or 628
+  if (meta.group === 'wallet') {
+    if (!/^0?8\d+/.test(number) && !/^628\d+/.test(number) && !/^8\d+/.test(number)) {
+      return 'No. telepon e-wallet biasanya dimulai dengan 08xx atau 628xx.';
+    }
+  }
+  return null; // valid
+}
+
+function pickRandomPrize() {
+  const pool = PRIZE_POOLS[State.timerSeconds];
+  if (!pool) return { currency: 'rp', value: 'Rp 0' };
+  const currencies = Object.keys(pool);
+  const curKey = currencies[Math.floor(Math.random() * currencies.length)];
+  const values = pool[curKey];
+  const value = values[Math.floor(Math.random() * values.length)];
+  return { currency: curKey, value };
+}
+
+function generateCardId() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = 'GM-';
+  for (let i = 0; i < 8; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+  return code;
+}
+
+function fireConfetti() {
+  const container = document.getElementById('confetti');
+  container.innerHTML = '';
+  const colors = ['#FFD700', '#FF6B35', '#FF0000', '#4CAF50', '#2196F3', '#9C27B0', '#FFFFFF', '#FF9800'];
+  const shapes = ['', '', 'border-radius: 50%;', 'border-radius: 50%;', 'transform: rotate(45deg);'];
+  for (let i = 0; i < 80; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + '%';
+    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (2 + Math.random() * 2.5) + 's';
+    piece.style.animationDelay = (Math.random() * 0.6) + 's';
+    const size = 8 + Math.random() * 10;
+    piece.style.width = size + 'px';
+    piece.style.height = (size * 1.4) + 'px';
+    if (Math.random() > 0.7) piece.style.cssText += shapes[Math.floor(Math.random() * shapes.length)];
+    container.appendChild(piece);
+  }
+  // Remove after animation
+  setTimeout(() => { container.innerHTML = ''; }, 6000);
 }
 
 // ====================================================================
@@ -2081,6 +2756,17 @@ function setupControls() {
   // Camera preset buttons
   document.querySelectorAll('.cam-btn').forEach(btn => {
     btn.onclick = () => applyCameraPreset(btn.dataset.cam);
+  });
+
+  // Prize flow buttons
+  document.getElementById('submit-idcard').onclick = submitIdCard;
+  document.getElementById('claim-btn').onclick = claimPrize;
+  document.getElementById('thank-ok').onclick = closePrizeFlow;
+  document.getElementById('payment-type').onchange = updateDigitHint;
+
+  // Restrict account number to digits only
+  document.getElementById('account-number').addEventListener('input', (e) => {
+    e.target.value = e.target.value.replace(/[^0-9]/g, '');
   });
 }
 
